@@ -5,13 +5,7 @@ import darrylbu.component.StayOpenRadioButtonMenuItem;
 import org.apache.commons.lang3.tuple.Pair;
 import pl.poznan.put.comparison.MCQ;
 import pl.poznan.put.comparison.RMSD;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import pl.poznan.put.comparison.LCS;
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
 import pl.poznan.put.comparison.global.GlobalComparator;
 import pl.poznan.put.datamodel.ProcessingResult;
 import pl.poznan.put.gui.panel.GlobalMatrixPanel;
@@ -78,14 +72,8 @@ public class MainWindow extends JFrame {
             new StayOpenRadioButtonMenuItem("Global MCQ", true);
     private final JRadioButtonMenuItem radioGlobalRmsd =
             new StayOpenRadioButtonMenuItem("Global RMSD", false);
-<<<<<<< HEAD
-<<<<<<< HEAD
     private final JRadioButtonMenuItem radioGlobalLcs =
             new StayOpenRadioButtonMenuItem("Global LCS", false);
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
     private final JRadioButtonMenuItem radioLocal =
             new StayOpenRadioButtonMenuItem("Local distances (pair)", false);
     private final JRadioButtonMenuItem radioLocalMulti =
@@ -227,13 +215,7 @@ public class MainWindow extends JFrame {
         menuDistanceMeasure.add(new JLabel("    Select distance type:"));
         menuDistanceMeasure.add(radioGlobalMcq);
         menuDistanceMeasure.add(radioGlobalRmsd);
-<<<<<<< HEAD
-<<<<<<< HEAD
         menuDistanceMeasure.add(radioGlobalLcs);
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
         menuDistanceMeasure.add(radioLocal);
         menuDistanceMeasure.add(radioLocalMulti);
         menuDistanceMeasure.addSeparator();
@@ -268,13 +250,7 @@ public class MainWindow extends JFrame {
         ButtonGroup group = new ButtonGroup();
         group.add(radioGlobalMcq);
         group.add(radioGlobalRmsd);
-<<<<<<< HEAD
-<<<<<<< HEAD
         group.add(radioGlobalLcs);
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
         group.add(radioLocal);
         group.add(radioLocalMulti);
 
@@ -287,13 +263,7 @@ public class MainWindow extends JFrame {
     private void registerMenuActionListeners() {
         radioGlobalMcq.addActionListener(radioActionListener);
         radioGlobalRmsd.addActionListener(radioActionListener);
-<<<<<<< HEAD
-<<<<<<< HEAD
         radioGlobalLcs.addActionListener(radioActionListener);
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
         radioLocal.addActionListener(radioActionListener);
         radioLocalMulti.addActionListener(radioActionListener);
 
@@ -503,21 +473,11 @@ public class MainWindow extends JFrame {
     }
 
     private void compareGlobal() {
-<<<<<<< HEAD
-<<<<<<< HEAD
 
         GlobalComparator comparator =
                 (radioGlobalMcq.isSelected() ? new MCQ() :
                  radioGlobalRmsd.isSelected() ? new RMSD() : 
                                                 new LCS());
-=======
-        GlobalComparator comparator =
-                radioGlobalMcq.isSelected() ? new MCQ() : new RMSD();
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
-        GlobalComparator comparator =
-                radioGlobalMcq.isSelected() ? new MCQ() : new RMSD();
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
         panelResultsGlobalMatrix.compareAndDisplayMatrix(comparator,
                                                          new GlobalMatrixPanel.Callback() {
                                                              @Override

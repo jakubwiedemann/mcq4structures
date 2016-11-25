@@ -5,14 +5,8 @@
     <artifactId>mcq4structures</artifactId>
     <version>1.2.1</version>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     <packaging>jar</packaging>
 
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
     <properties>
         <biojava.version>4.2.4</biojava.version>
     </properties>
@@ -62,36 +56,7 @@
                 </configuration>
             </plugin>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-<<<<<<< HEAD
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
-=======
->>>>>>> 04985cb688d3d599ffeb86d5ce3a0d55a47b4210
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
