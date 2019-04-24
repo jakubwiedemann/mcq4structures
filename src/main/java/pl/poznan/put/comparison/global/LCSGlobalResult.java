@@ -32,14 +32,14 @@ public class LCSGlobalResult extends GlobalResult {
 
 
     public LCSGlobalResult(String measureName, SelectionMatch selectionMatch,
-                           AngleSample angleSample, StructureSelection model, StructureSelection target) {
+                           AngleSample angleSample, StructureSelection model, StructureSelection target, StructureSelection refmodel, int count) {
         super(measureName, selectionMatch);
         this.angleSample = angleSample;
-        this.longDisplayName = prepareLongDisplayName(model, target);
+        this.longDisplayName = prepareLongDisplayName(model, target, refmodel, count);
 
     }
 
-    private String prepareLongDisplayName(StructureSelection model, StructureSelection target) {
+    private String prepareLongDisplayName(StructureSelection model, StructureSelection target, StructureSelection refmodel, int count) {
         SelectionMatch selectionMatch = getSelectionMatch();
         AngleDeltaIterator angleDeltaIterator =
                 new MatchCollectionDeltaIterator(selectionMatch);
@@ -47,7 +47,9 @@ public class LCSGlobalResult extends GlobalResult {
                 SingleMatchStatistics.calculate("", angleDeltaIterator);
 
         int validCount = selectionMatch.getResidueLabels().size();
-        int length =target.getResidues().size();
+	//System.out.print(validCount);
+        int length =refmodel.getResidues().size();
+ 	//System.out.print(length);
         double coverage = (double)validCount/(double)length*100.0;
         PdbResidue s;
         PdbResidue e;
@@ -61,26 +63,31 @@ public class LCSGlobalResult extends GlobalResult {
 
 
         StringBuilder builder = new StringBuilder("<html>");
+		builder.append("MCQ: ");
         builder.append(getShortDisplayName());
         builder.append("<br>");
+		builder.append("LCS: ");
         builder.append(validCount);
         builder.append("<br>");
+		builder.append("LCS[%]: ");
         builder.append(String.format("%.4g%n", coverage));
         builder.append('%');
         builder.append("<br>");
         builder.append(target.getName());
         builder.append("<br>");
-        builder.append(s);
+        builder.append(s +" - " +e);
         builder.append("<br>");
-        builder.append(e);
-        builder.append("<br>");
+        /*builder.append(e);
+        builder.append("<br>");*/
         builder.append(model.getName());
         builder.append("<br>");
-        builder.append(s1);
+        builder.append(s1+" - " +e1);
         builder.append("<br>");
-        builder.append(e1);
+        /*builder.append(e1);
+        builder.append("<br>");*/
+        /*builder.append(count);
         builder.append("<br>");
-        builder.append("</html>");
+        builder.append("</html>");*/
         return builder.toString();
     }
 

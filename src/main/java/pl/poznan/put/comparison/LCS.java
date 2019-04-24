@@ -51,6 +51,7 @@ public class LCS implements GlobalComparator {
 
     private final List<MasterTorsionAngleType> angleTypes;
     public double mcqValue;
+
     public LCS() {
         super();
         angleTypes = new ArrayList<>();
@@ -58,7 +59,7 @@ public class LCS implements GlobalComparator {
         angleTypes.addAll(Arrays.asList(ProteinTorsionAngleType.mainAngles()));
 
         JFrame frame = new JFrame("MCQ value");
-        mcqValue = Math.toRadians(Double.parseDouble(JOptionPane.showInputDialog(frame, "MCQ value")));
+        mcqValue = Math.toRadians(Double.parseDouble(JOptionPane.showInputDialog(frame, "Set threshold in degrees [\u00b0]")));
 
     }
  
@@ -140,6 +141,7 @@ public class LCS implements GlobalComparator {
     public GlobalResult compareGlobally(StructureSelection target,
                                         StructureSelection model)
             throws IncomparableStructuresException {
+			//	if (model.getName().equals("1Q9A")){
         MCQMatcher matcher = new MCQMatcher(angleTypes);
         SelectionMatch matches = matcher.matchSelections(target, model);
 
@@ -166,16 +168,20 @@ public class LCS implements GlobalComparator {
 
         AngleSample angleSample = new AngleSample(deltas);
         /*System.out.print(angleSample.getMeanDirection().getRadians());*/
-        /*System.out.print(model.getName());*/
+        /*System.out.print(model.getName()+"\n");*/
         /*System.out.print(model +"\n");*/
         /*System.out.print(model.getResidues().subList(1,model.getResidues().size()));*/
         double maxMcqVal = 0.0;
         int longest = 0;
         boolean found = false;
-        RefinementResult maxRefinementResult = new RefinementResult(matches, new AngleSample(deltas), model, target);  
+		boolean exist = false;
+		int count = 0;
+        
+        RefinementResult maxRefinementResult = new RefinementResult(matches, new AngleSample(deltas), model, target);
+		/*System.out.print("" +angleSample.getMeanDirection().getRadians());*/
         if (angleSample.getMeanDirection().getRadians()<mcqValue) {
-
-            return new LCSGlobalResult(getName(), matches, new AngleSample(deltas), model, target);
+			/*System.out.print("powinno zwrocic");*/
+            return new LCSGlobalResult(getName(), matches, new AngleSample(deltas), model, target, model, 1);
         }
         else{
             int s;
@@ -184,15 +190,32 @@ public class LCS implements GlobalComparator {
             while (l <= p){
                 s = (l + p) / 2;
                 found = false;
+				
                 for(int j=0; j+s<=target.getResidues().size(); j++){
+					try{
                     List<PdbResidue> fragmentResidues = target.getResidues().subList(j,j+s);
                     StructureSelection target1 = new StructureSelection(target.getName(), fragmentResidues);
                     RefinementResult localRefinementResult = refinement(model, target1);
                     if (localRefinementResult.getSample().getMeanDirection().getRadians()<=mcqValue && longest<=localRefinementResult.getMatch().getResidueLabels().size()){
                         longest=localRefinementResult.getMatch().getResidueLabels().size();
                         maxRefinementResult = localRefinementResult;
+						if (found == false)
+						{
+						count = 0;
+						}
                         found = true;
+						exist = true;
+						count += 1;
+						/*if (count ==4){
+						break;
+						}*/
                     }
+					}
+					catch(Exception e) {
+               //System.out.print("Nothing\n");
+               // I want to go to next interation
+
+           }
                 }
                 if (found == true){
                     l = s + 1;
@@ -203,9 +226,17 @@ public class LCS implements GlobalComparator {
 
             } 
             
-            
-            return new LCSGlobalResult(getName(), maxRefinementResult.getMatch(), maxRefinementResult.getSample(), maxRefinementResult.getModel(), maxRefinementResult.getTarget());
+            if (exist == true){
+            return new LCSGlobalResult(getName(), maxRefinementResult.getMatch(), maxRefinementResult.getSample(), maxRefinementResult.getModel(), maxRefinementResult.getTarget(), model, count);
+			}
+			else {
+			return null;	
+			}
         }
+        //}
+       // else{
+        // return null;
+       // }
     }
     public class RefinementResult{
         SelectionMatch selectionMatch;
@@ -275,7 +306,7 @@ public class LCS implements GlobalComparator {
 
     @Override
     public String getName() {
-        return "LCS";
+        return "LCS (Sequence independent)";
     }
 
     @Override

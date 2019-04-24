@@ -52,7 +52,6 @@ public class GlobalMatrixPanel extends JPanel {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Distance matrix", new JScrollPane(tableMatrix));
         tabbedPane.add("Visualization", visualization);
-
         add(panelInfo, BorderLayout.NORTH);
         add(tabbedPane, BorderLayout.CENTER);
         add(panelProgressBar, BorderLayout.SOUTH);
@@ -133,7 +132,6 @@ public class GlobalMatrixPanel extends JPanel {
                                                          tableMatrix.setModel(
                                                                  matrix.asDisplayableTableModel());
                                                          updateRowHeights();
-
                                                          visualization
                                                                  .setSVGDocument(
                                                                          document);

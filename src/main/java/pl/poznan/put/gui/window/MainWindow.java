@@ -6,9 +6,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import pl.poznan.put.comparison.MCQ;
 import pl.poznan.put.comparison.RMSD;
 import pl.poznan.put.comparison.LCS;
+import pl.poznan.put.comparison.LCSmode2;
 import pl.poznan.put.comparison.global.GlobalComparator;
 import pl.poznan.put.datamodel.ProcessingResult;
 import pl.poznan.put.gui.panel.GlobalMatrixPanel;
+//import pl.poznan.put.gui.panel.GlobalMatrixPanelLcs;
 import pl.poznan.put.gui.panel.LocalMatrixPanel;
 import pl.poznan.put.gui.panel.LocalMultiMatrixPanel;
 import pl.poznan.put.gui.panel.SequenceAlignmentPanel;
@@ -46,6 +48,7 @@ public class MainWindow extends JFrame {
     private static final String CARD_ALIGN_SEQ = "CARD_ALIGN_SEQ";
     private static final String CARD_ALIGN_STRUC = "CARD_ALIGN_STRUC";
     private static final String CARD_GLOBAL_MATRIX = "CARD_GLOBAL_MATRIX";
+	//private static final String CARD_GLOBAL_MATRIX_LCS = "CARD_GLOBAL_MATRIX_LCS";
     private static final String CARD_LOCAL_MATRIX = "CARD_LOCAL_MATRIX";
     private static final String CARD_LOCAL_MULTI_MATRIX =
             "CARD_LOCAL_MULTI_MATRIX";
@@ -73,7 +76,9 @@ public class MainWindow extends JFrame {
     private final JRadioButtonMenuItem radioGlobalRmsd =
             new StayOpenRadioButtonMenuItem("Global RMSD", false);
     private final JRadioButtonMenuItem radioGlobalLcs =
-            new StayOpenRadioButtonMenuItem("Global LCS", false);
+            new StayOpenRadioButtonMenuItem("Global LCS (Sequence independent)", false);
+    private final JRadioButtonMenuItem radioGlobalLcsmode2 =
+            new StayOpenRadioButtonMenuItem("Global LCS (Sequence dependent)", false);
     private final JRadioButtonMenuItem radioLocal =
             new StayOpenRadioButtonMenuItem("Local distances (pair)", false);
     private final JRadioButtonMenuItem radioLocalMulti =
@@ -109,6 +114,8 @@ public class MainWindow extends JFrame {
             new TorsionAngleValuesMatrixPanel();
     private final GlobalMatrixPanel panelResultsGlobalMatrix =
             new GlobalMatrixPanel();
+	//private final GlobalMatrixPanelLcs panelResultsGlobalMatrixLcs =
+     //       new GlobalMatrixPanelLcs();
     private final LocalMatrixPanel panelResultsLocalMatrix =
             new LocalMatrixPanel();
     private final LocalMultiMatrixPanel panelResultsLocalMultiMatrix =
@@ -169,6 +176,7 @@ public class MainWindow extends JFrame {
         panelCards.add(new JPanel());
         panelCards.add(panelTorsionAngles, MainWindow.CARD_TORSION);
         panelCards.add(panelResultsGlobalMatrix, MainWindow.CARD_GLOBAL_MATRIX);
+        //panelCards.add(panelResultsGlobalMatrixLcs, MainWindow.CARD_GLOBAL_MATRIX_LCS);
         panelCards.add(panelResultsLocalMatrix, MainWindow.CARD_LOCAL_MATRIX);
         panelCards.add(panelResultsLocalMultiMatrix,
                        MainWindow.CARD_LOCAL_MULTI_MATRIX);
@@ -216,6 +224,7 @@ public class MainWindow extends JFrame {
         menuDistanceMeasure.add(radioGlobalMcq);
         menuDistanceMeasure.add(radioGlobalRmsd);
         menuDistanceMeasure.add(radioGlobalLcs);
+        menuDistanceMeasure.add(radioGlobalLcsmode2);
         menuDistanceMeasure.add(radioLocal);
         menuDistanceMeasure.add(radioLocalMulti);
         menuDistanceMeasure.addSeparator();
@@ -251,6 +260,7 @@ public class MainWindow extends JFrame {
         group.add(radioGlobalMcq);
         group.add(radioGlobalRmsd);
         group.add(radioGlobalLcs);
+        group.add(radioGlobalLcsmode2);
         group.add(radioLocal);
         group.add(radioLocalMulti);
 
@@ -264,6 +274,7 @@ public class MainWindow extends JFrame {
         radioGlobalMcq.addActionListener(radioActionListener);
         radioGlobalRmsd.addActionListener(radioActionListener);
         radioGlobalLcs.addActionListener(radioActionListener);
+        radioGlobalLcsmode2.addActionListener(radioActionListener);
         radioLocal.addActionListener(radioActionListener);
         radioLocalMulti.addActionListener(radioActionListener);
 
@@ -468,7 +479,9 @@ public class MainWindow extends JFrame {
         itemCluster.setEnabled(false);
 
         panelResultsGlobalMatrix.setStructures(structures);
+		//panelResultsGlobalMatrixLcs.setStructures(structures);
         layoutCards.show(panelCards, MainWindow.CARD_GLOBAL_MATRIX);
+        //layoutCards.show(panelCards, MainWindow.CARD_GLOBAL_MATRIX_LCS);
         compareGlobal();
     }
 
@@ -477,8 +490,27 @@ public class MainWindow extends JFrame {
         GlobalComparator comparator =
                 (radioGlobalMcq.isSelected() ? new MCQ() :
                  radioGlobalRmsd.isSelected() ? new RMSD() : 
-                                                new LCS());
-        panelResultsGlobalMatrix.compareAndDisplayMatrix(comparator,
+                 radioGlobalLcs.isSelected() ? new LCS() :
+                                                 new LCSmode2());
+		/*if((radioGlobalLcs.isSelected()) || (radioGlobalLcsmode2.isSelected())){
+        panelResultsGlobalMatrixLcs.compareAndDisplayMatrix(comparator,
+                                                         new GlobalMatrixPanelLcs.Callback() {
+                                                             @Override
+                                                             public void
+                                                             complete(
+                                                                     ProcessingResult processingResult) {
+                                                                 currentResult =
+                                                                         processingResult;
+                                                                 layoutCards
+                                                                         .show(panelCards,
+                                                                               MainWindow.CARD_GLOBAL_MATRIX_LCS);
+                                                                 updateMenuEnabledStates();
+
+                                                             }
+                                                         });
+    }
+		else{*/
+		        panelResultsGlobalMatrix.compareAndDisplayMatrix(comparator,
                                                          new GlobalMatrixPanel.Callback() {
                                                              @Override
                                                              public void
@@ -493,8 +525,8 @@ public class MainWindow extends JFrame {
 
                                                              }
                                                          });
-    }
-
+		//}
+	}
     private void selectChains(JMenuItem source) {
         if (dialogChains.showDialog() != DialogSelectChains.OK) {
             return;
